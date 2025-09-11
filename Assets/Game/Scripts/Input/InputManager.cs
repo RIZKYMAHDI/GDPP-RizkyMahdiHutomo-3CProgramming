@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public Action<Vector2> OnMoveInput;
+    public Action<bool> OnSprintInput;
+    public Action OnJumpInput;
+    public Action OnClimbInput;
+    public Action OnCancelClimb;
     private void Update()
     {
         CheckSprintInput();
@@ -16,19 +21,22 @@ public class InputManager : MonoBehaviour
         CheckCancelInput();
         CheckPunchInput();
         CheckMainMenuInput();
+        CheckMovementInput();
     }
 
+    
     private void CheckSprintInput()
     {
         bool isHoldSprintInput = Input.GetKey(KeyCode.LeftShift) ||
-                                      Input.GetKey(KeyCode.RightShift);
+                         Input.GetKey(KeyCode.RightShift);
+
         if (isHoldSprintInput)
         {
-            Debug.Log("Sprinting");
+            OnSprintInput(true);
         }
         else
         {
-            Debug.Log("Not Sprinting");
+            OnSprintInput(false);
         }
     }
 
@@ -38,7 +46,7 @@ public class InputManager : MonoBehaviour
 
         if (isPressJumpInput)
         {
-            Debug.Log("Jump");
+            OnJumpInput();
         }
     }
 
@@ -68,7 +76,7 @@ public class InputManager : MonoBehaviour
 
         if (isPressClimbInput)
         {
-            Debug.Log("Climb");
+            OnClimbInput();
         }
     }
 
@@ -88,7 +96,10 @@ public class InputManager : MonoBehaviour
 
         if (isPressCancelInput)
         {
-            Debug.Log("Cancel Climb or Glide");
+            if (OnCancelClimb != null)
+            {
+                OnCancelClimb();
+            }
         }
     }
 
@@ -109,6 +120,17 @@ public class InputManager : MonoBehaviour
         if (isPressMainMenuInput)
         {
             Debug.Log("Back To Main Menu");
+        }
+    }
+
+    private void CheckMovementInput()
+    {
+        float verticalAxis = Input.GetAxis("Vertical");
+        float horizontalAxis = Input.GetAxis("Horizontal");
+        Vector2 inputAxis = new Vector2(horizontalAxis, verticalAxis);
+        if (OnMoveInput != null)
+        {
+            OnMoveInput(inputAxis);
         }
     }
 
