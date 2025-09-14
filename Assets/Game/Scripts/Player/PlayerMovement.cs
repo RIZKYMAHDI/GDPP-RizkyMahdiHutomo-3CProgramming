@@ -60,6 +60,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float _hitDetectorRadius;
     [SerializeField]
+    private PlayerAudioManager _playerAudioManager;
+    [SerializeField]
     private LayerMask _hitLayer;
     private float _speed;
     private bool _isGrounded;
